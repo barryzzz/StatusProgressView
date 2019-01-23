@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="StatusProgressView">
-        <attr name="itemCount" format="integer" />
-
+        <attr name="completeState" format="integer" />
+        <attr name="lineheight" format="dimension" />
+        <attr name="completeBackgroud" format="reference" />
+        <attr name="uncompleteBackgroud" format="reference" />
+        <attr name="completeColor" format="color" />
+        <attr name="uncompleteColor" format="color" />
+        <attr name="itemTextSize" format="dimension" />
+        <attr name="itemValues" format="reference" />
     </declare-styleable>
+
+    <!--{"受理中", "审批中", "制证", "测试", "公测", "爬虫程序"};-->
+    <string-array name="ProgressStatus">
+        <item>受理中</item>
+        <item>审批中</item>
+        <item>制证</item>
+        <item>测试</item>
+        <item>公测</item>
+        <item>爬虫程序</item>
+
+    </string-array>
 </resources>

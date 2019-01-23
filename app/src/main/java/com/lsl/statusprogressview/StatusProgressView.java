@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
+ * status progress view
+ *
  * @author barry
  * @version 1.0
  * @date 2019/1/23
@@ -19,23 +21,28 @@ import android.view.View;
 public class StatusProgressView extends View {
 
 
-    private int mItemCount = 6;
+    private int mItemCount = 1;
 
     private int mCompleteState = 3;
 
-    private int mItemWidth;
-    private int mItemHeight;
+    private int mCompleteColor;
+    private int mUnCompleteColor;
+
 
     private Bitmap mCompleteBitmap;
     private Bitmap mUncompleteBitmap;
 
-    private Bitmap mBitmap;
+
+    private int mItemWidth;
+    private int mItemHeight;
 
     private Paint mPaint;
 
     private TextPaint mTextPaint;
 
-    private String[] strs = {"受理中", "审批中", "制证", "测试", "公测", "爬虫程序"};
+    private CharSequence[] mStrs;
+
+    private String[] coloes = {"#03A9F5", "#E4E4E4"};
 
     public StatusProgressView(Context context) {
         this(context, null);
@@ -51,19 +58,29 @@ public class StatusProgressView extends View {
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.StatusProgressView, defStyleAttr, 0);
 
-        mItemCount = array.getInteger(R.styleable.StatusProgressView_itemCount, 1);
+        mCompleteState = array.getInt(R.styleable.StatusProgressView_completeState, 1);
+        float line = array.getDimension(R.styleable.StatusProgressView_lineheight, dp2px(5f));
+        int complete = array.getResourceId(R.styleable.StatusProgressView_completeBackgroud, R.drawable.audit_complete);
+        int uncompete = array.getResourceId(R.styleable.StatusProgressView_uncompleteBackgroud, R.drawable.audit_uncomplete);
+        mCompleteColor = array.getColor(R.styleable.StatusProgressView_completeColor, Color.parseColor(coloes[0]));
+        mUnCompleteColor = array.getColor(R.styleable.StatusProgressView_uncompleteColor, Color.parseColor(coloes[1]));
+
+        float textSize = array.getDimension(R.styleable.StatusProgressView_itemTextSize, sp2px(16));
+
+        mStrs = array.getTextArray(R.styleable.StatusProgressView_itemValues);
+
+        mItemCount = mStrs.length;
 
         array.recycle();
 
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.audit_complete);
-        mUncompleteBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.audit_uncomplete);
+        mCompleteBitmap = BitmapFactory.decodeResource(getResources(), complete);
+        mUncompleteBitmap = BitmapFactory.decodeResource(getResources(), uncompete);
+
         mPaint = new Paint();
-        mPaint.setColor(Color.RED);
-        mPaint.setStrokeWidth(20f);
+        mPaint.setStrokeWidth(line);
 
         mTextPaint = new TextPaint();
-        mTextPaint.setColor(Color.RED);
-        mTextPaint.setTextSize(sp2px(16f));
+        mTextPaint.setTextSize(textSize);
         mTextPaint.setStyle(Paint.Style.FILL);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -82,37 +99,69 @@ public class StatusProgressView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         for (int i = 0; i < mItemCount; i++) {
-            canvas.drawBitmap(mBitmap, (mItemWidth * i + mItemWidth / 2) - mBitmap.getWidth() / 2, mItemHeight / 2 - mBitmap.getHeight() / 2, mPaint);
+
+
+            Bitmap bitmap;
+            if (i < mCompleteState) {
+                bitmap = mCompleteBitmap;
+            } else {
+                bitmap = mUncompleteBitmap;
+            }
+            canvas.drawBitmap(bitmap, (mItemWidth * i + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2 - bitmap.getHeight() / 2, mPaint);
+
+
+            if (i < mCompleteState) {
+                mPaint.setColor(mCompleteColor);
+                mTextPaint.setColor(mCompleteColor);
+            } else {
+                mPaint.setColor(mUnCompleteColor);
+                mTextPaint.setColor(mUnCompleteColor);
+            }
             if (i != 0) {
                 canvas.drawLine(i * mItemWidth, mItemHeight / 2,
-                        (i * mItemWidth + mItemWidth / 2) - mBitmap.getWidth() / 2, mItemHeight / 2, mPaint);
+                        (i * mItemWidth + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2, mPaint);
             }
+
+            canvas.drawText((String) mStrs[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
+
+            if (i == mCompleteState - 1) {
+                mPaint.setColor(mUnCompleteColor);
+            }
+
             if (i != mItemCount - 1) {
-                canvas.drawLine((mItemWidth * i + mItemWidth / 2) + mBitmap.getWidth() / 2, mItemHeight / 2,
+                canvas.drawLine((mItemWidth * i + mItemWidth / 2) + bitmap.getWidth() / 2, mItemHeight / 2,
                         (i + 1) * mItemWidth, mItemHeight / 2, mPaint);
             }
 
-            canvas.drawText(strs[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + mBitmap.getHeight(), mTextPaint);
 
         }
     }
 
 
-    public int dp2px(float dp) {
+    public void setCompleteState(int state) {
+        if (state > mItemCount) {
+            throw new IndexOutOfBoundsException("state index out of itemCount!");
+        }
+        mCompleteState = state;
+        invalidate();
+    }
+
+
+    private int dp2px(float dp) {
         float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
 
-    public int px2dp(float px) {
+    private int px2dp(float px) {
         float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
     }
 
-    public float px2sp(float px) {
+    private float px2sp(float px) {
         return (int) (px / getContext().getResources().getDisplayMetrics().scaledDensity + 0.5f);
     }
 
-    public float sp2px(float sp) {
+    private float sp2px(float sp) {
         float fontScale = getContext().getResources().getDisplayMetrics().scaledDensity;
         return (int) (sp * fontScale + 0.5f);
     }

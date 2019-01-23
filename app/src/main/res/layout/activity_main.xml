@@ -10,12 +10,19 @@
     <com.lsl.statusprogressview.StatusProgressView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:itemCount="6" />
+        app:completeBackgroud="@drawable/audit_complete"
+        app:completeColor="#03A9F5"
+        app:completeState="2"
+        app:itemTextSize="12sp"
+        app:itemValues="@array/ProgressStatus"
+        app:lineheight="10dp"
+        app:uncompleteBackgroud="@drawable/audit_uncomplete"
+        app:uncompleteColor="#E4E4E4" />
 
     <LinearLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ic_launcher_background"/>
+        android:background="@drawable/ic_launcher_background" />
 
 </LinearLayout>
