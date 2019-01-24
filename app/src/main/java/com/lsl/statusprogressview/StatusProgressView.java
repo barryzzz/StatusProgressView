@@ -7,10 +7,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.IntDef;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 /**
@@ -25,7 +28,7 @@ public class StatusProgressView extends View {
 
     private int mItemCount = 0;
 
-    private int mCompleteState = 3;
+    private int mCompleteState;
 
     private int mCompleteColor;
     private int mUnCompleteColor;
@@ -46,7 +49,10 @@ public class StatusProgressView extends View {
 
     private float mLineSize;
 
-    private boolean mHalfLine = false;
+    private boolean mHalfLine;
+
+    @TextStyleMode
+    private int mTextStyle = TextStyleMode.BOTTOM;
 
     public StatusProgressView(Context context) {
         this(context, null);
@@ -77,6 +83,9 @@ public class StatusProgressView extends View {
             mItemCount = mStatuValues.length;
 
         mHalfLine = array.getBoolean(R.styleable.StatusProgressView_itemHalfLine, false);
+
+        mTextStyle = array.getInteger(R.styleable.StatusProgressView_itemTextStyle, TextStyleMode.BOTTOM);
+
         array.recycle();
 
         mCompleteBitmap = BitmapFactory.decodeResource(getResources(), complete);
@@ -121,13 +130,19 @@ public class StatusProgressView extends View {
 
             canvas.drawBitmap(bitmap, (mItemWidth * i + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2 - bitmap.getHeight() / 2, mPaint);
 
+
+            if (mStatuValues != null) {
+                if (mTextStyle == TextStyleMode.TOP) {
+                    canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 - bitmap.getHeight(), mTextPaint);
+                } else if (mTextStyle == TextStyleMode.BOTTOM) {
+                    canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
+                }
+            }
+
             if (i != 0) {
                 canvas.drawLine(i * mItemWidth, mItemHeight / 2,
                         (i * mItemWidth + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2, mPaint);
             }
-            if (mStatuValues != null)
-                canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
-
             if (i == mCompleteState - 1 && !mHalfLine) {
                 mPaint.setColor(mUnCompleteColor);
             }
@@ -232,6 +247,19 @@ public class StatusProgressView extends View {
         }
         mCompleteState = state;
         invalidate();
+    }
+
+    /**
+     * 显示样式，顶部，底部显示
+     */
+    @IntDef({
+            TextStyleMode.TOP,
+            TextStyleMode.BOTTOM
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TextStyleMode {
+        int TOP = 0x1;
+        int BOTTOM = 0x2;
     }
 
     /**

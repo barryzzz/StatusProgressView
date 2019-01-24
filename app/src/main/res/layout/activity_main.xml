@@ -15,6 +15,7 @@
         app:completeColor="@color/color_completed"
         app:completeState="2"
         app:itemHalfLine="true"
+        app:itemTextStyle="Bottom"
         app:itemTextSize="12sp"
         app:itemValues="@array/ProgressStatus"
         app:lineSize="10dp"

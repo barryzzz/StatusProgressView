@@ -9,7 +9,11 @@
         <attr name="uncompleteColor" format="color" />
         <attr name="itemTextSize" format="dimension" />
         <attr name="itemValues" format="reference" />
-        <attr name="itemHalfLine" format="boolean"/>
+        <attr name="itemHalfLine" format="boolean" />
+        <attr name="itemTextStyle" format="enum">
+            <enum name="Top" value="0x1" />
+            <enum name="Bottom" value="0x2" />
+        </attr>
     </declare-styleable>
 
     <!--{"受理中", "审批中", "制证", "测试", "公测", "爬虫程序"};-->
