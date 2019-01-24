@@ -30,7 +30,7 @@ public class StatusProgressView extends View {
 
 
     private Bitmap mCompleteBitmap;
-    private Bitmap mUncompleteBitmap;
+    private Bitmap mUncompletedBitmap;
 
 
     private int mItemWidth;
@@ -40,9 +40,7 @@ public class StatusProgressView extends View {
 
     private TextPaint mTextPaint;
 
-    private CharSequence[] mStrs;
-
-    private String[] coloes = {"#03A9F5", "#E4E4E4"};
+    private CharSequence[] mStatuValues;
 
     public StatusProgressView(Context context) {
         this(context, null);
@@ -62,19 +60,20 @@ public class StatusProgressView extends View {
         float line = array.getDimension(R.styleable.StatusProgressView_lineheight, dp2px(5f));
         int complete = array.getResourceId(R.styleable.StatusProgressView_completeBackgroud, R.drawable.audit_complete);
         int uncompete = array.getResourceId(R.styleable.StatusProgressView_uncompleteBackgroud, R.drawable.audit_uncomplete);
+        String[] coloes = {"#03A9F5", "#E4E4E4"};
         mCompleteColor = array.getColor(R.styleable.StatusProgressView_completeColor, Color.parseColor(coloes[0]));
         mUnCompleteColor = array.getColor(R.styleable.StatusProgressView_uncompleteColor, Color.parseColor(coloes[1]));
 
         float textSize = array.getDimension(R.styleable.StatusProgressView_itemTextSize, sp2px(16));
 
-        mStrs = array.getTextArray(R.styleable.StatusProgressView_itemValues);
+        mStatuValues = array.getTextArray(R.styleable.StatusProgressView_itemValues);
 
-        mItemCount = mStrs.length;
+        mItemCount = mStatuValues.length;
 
         array.recycle();
 
         mCompleteBitmap = BitmapFactory.decodeResource(getResources(), complete);
-        mUncompleteBitmap = BitmapFactory.decodeResource(getResources(), uncompete);
+        mUncompletedBitmap = BitmapFactory.decodeResource(getResources(), uncompete);
 
         mPaint = new Paint();
         mPaint.setStrokeWidth(line);
@@ -100,29 +99,25 @@ public class StatusProgressView extends View {
         super.onDraw(canvas);
         for (int i = 0; i < mItemCount; i++) {
 
-
             Bitmap bitmap;
             if (i < mCompleteState) {
                 bitmap = mCompleteBitmap;
-            } else {
-                bitmap = mUncompleteBitmap;
-            }
-            canvas.drawBitmap(bitmap, (mItemWidth * i + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2 - bitmap.getHeight() / 2, mPaint);
-
-
-            if (i < mCompleteState) {
                 mPaint.setColor(mCompleteColor);
                 mTextPaint.setColor(mCompleteColor);
             } else {
+                bitmap = mUncompletedBitmap;
                 mPaint.setColor(mUnCompleteColor);
                 mTextPaint.setColor(mUnCompleteColor);
             }
+
+            canvas.drawBitmap(bitmap, (mItemWidth * i + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2 - bitmap.getHeight() / 2, mPaint);
+
             if (i != 0) {
                 canvas.drawLine(i * mItemWidth, mItemHeight / 2,
                         (i * mItemWidth + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2, mPaint);
             }
 
-            canvas.drawText((String) mStrs[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
+            canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
 
             if (i == mCompleteState - 1) {
                 mPaint.setColor(mUnCompleteColor);
