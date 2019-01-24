@@ -11,6 +11,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.List;
+
 /**
  * status progress view
  *
@@ -40,7 +42,9 @@ public class StatusProgressView extends View {
 
     private TextPaint mTextPaint;
 
-    private CharSequence[] mStatuValues;
+    private String[] mStatuValues;
+
+    private float mLine;
 
     public StatusProgressView(Context context) {
         this(context, null);
@@ -57,7 +61,7 @@ public class StatusProgressView extends View {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.StatusProgressView, defStyleAttr, 0);
 
         mCompleteState = array.getInt(R.styleable.StatusProgressView_completeState, 1);
-        float line = array.getDimension(R.styleable.StatusProgressView_lineheight, dp2px(5f));
+        mLine = array.getDimension(R.styleable.StatusProgressView_lineheight, dp2px(5f));
         int complete = array.getResourceId(R.styleable.StatusProgressView_completeBackgroud, R.drawable.audit_complete);
         int uncompete = array.getResourceId(R.styleable.StatusProgressView_uncompleteBackgroud, R.drawable.audit_uncomplete);
         String[] coloes = {"#03A9F5", "#E4E4E4"};
@@ -66,7 +70,7 @@ public class StatusProgressView extends View {
 
         float textSize = array.getDimension(R.styleable.StatusProgressView_itemTextSize, sp2px(16));
 
-        mStatuValues = array.getTextArray(R.styleable.StatusProgressView_itemValues);
+        mStatuValues = (String[]) array.getTextArray(R.styleable.StatusProgressView_itemValues);
 
         mItemCount = mStatuValues.length;
 
@@ -76,7 +80,7 @@ public class StatusProgressView extends View {
         mUncompletedBitmap = BitmapFactory.decodeResource(getResources(), uncompete);
 
         mPaint = new Paint();
-        mPaint.setStrokeWidth(line);
+        mPaint.setStrokeWidth(mLine);
 
         mTextPaint = new TextPaint();
         mTextPaint.setTextSize(textSize);
@@ -116,8 +120,8 @@ public class StatusProgressView extends View {
                 canvas.drawLine(i * mItemWidth, mItemHeight / 2,
                         (i * mItemWidth + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2, mPaint);
             }
-
-            canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
+            if (mStatuValues.length != 0)
+                canvas.drawText(mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
 
             if (i == mCompleteState - 1) {
                 mPaint.setColor(mUnCompleteColor);
@@ -132,13 +136,106 @@ public class StatusProgressView extends View {
         }
     }
 
+    /**
+     * 获取线条size
+     *
+     * @return
+     */
+    public float getLineSize() {
+        return mLine;
+    }
 
+    /**
+     * 设置线条size
+     *
+     * @param line
+     */
+    public void setLineSize(float line) {
+        mLine = line;
+        mPaint.setStrokeWidth(dp2px(line));
+        invalidate();
+    }
+
+    /**
+     * 设置完成状态的图标
+     *
+     * @param completeBitmap
+     */
+    public void setCompleteBitmap(Bitmap completeBitmap) {
+        mCompleteBitmap = completeBitmap;
+        invalidate();
+    }
+
+    /**
+     * 设置未完成状态图标
+     *
+     * @param uncompletedBitmap
+     */
+    public void setUncompletedBitmap(Bitmap uncompletedBitmap) {
+        mUncompletedBitmap = uncompletedBitmap;
+        invalidate();
+    }
+
+    /**
+     * 设置完成状态颜色
+     *
+     * @param completeColor
+     */
+    public void setCompleteColor(int completeColor) {
+        mCompleteColor = completeColor;
+        invalidate();
+    }
+
+    /**
+     * 设置未完成状态颜色
+     *
+     * @param unCompleteColor
+     */
+    public void setUnCompleteColor(int unCompleteColor) {
+        mUnCompleteColor = unCompleteColor;
+        invalidate();
+    }
+
+    /**
+     * 设置statuValues
+     *
+     * @param statuValues
+     */
+    public void setStatuValues(String[] statuValues) {
+        mStatuValues = statuValues;
+        mItemCount = mStatuValues.length;
+        invalidate();
+    }
+
+    /**
+     * 设置statuValues
+     *
+     * @param statuValues
+     */
+    public void setStatuValues(List<String> statuValues) {
+        setStatuValues((String[]) statuValues.toArray());
+    }
+
+    /**
+     * 设置完成进度
+     *
+     * @param state
+     */
     public void setCompleteState(int state) {
         if (state > mItemCount) {
             throw new IndexOutOfBoundsException("state index out of itemCount!");
         }
         mCompleteState = state;
         invalidate();
+    }
+
+    /**
+     * 获取完成进度
+     *
+     * @return
+     */
+    public int getCompleteState() {
+        return mCompleteState;
     }
 
 
