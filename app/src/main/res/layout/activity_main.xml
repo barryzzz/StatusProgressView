@@ -14,9 +14,10 @@
         app:completeBackgroud="@drawable/jd_step_01"
         app:completeColor="@color/color_completed"
         app:completeState="2"
+        app:itemHalfLine="true"
         app:itemTextSize="12sp"
         app:itemValues="@array/ProgressStatus"
-        app:lineheight="10dp"
+        app:lineSize="10dp"
         app:uncompleteBackgroud="@drawable/jd_step_02"
         app:uncompleteColor="@color/color_uncompleted" />
 

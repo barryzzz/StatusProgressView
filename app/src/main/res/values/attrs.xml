@@ -2,13 +2,14 @@
 <resources>
     <declare-styleable name="StatusProgressView">
         <attr name="completeState" format="integer" />
-        <attr name="lineheight" format="dimension" />
+        <attr name="lineSize" format="dimension" />
         <attr name="completeBackgroud" format="reference" />
         <attr name="uncompleteBackgroud" format="reference" />
         <attr name="completeColor" format="color" />
         <attr name="uncompleteColor" format="color" />
         <attr name="itemTextSize" format="dimension" />
         <attr name="itemValues" format="reference" />
+        <attr name="itemHalfLine" format="boolean"/>
     </declare-styleable>
 
     <!--{"受理中", "审批中", "制证", "测试", "公测", "爬虫程序"};-->

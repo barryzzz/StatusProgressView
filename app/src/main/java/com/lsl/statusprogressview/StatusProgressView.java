@@ -44,7 +44,9 @@ public class StatusProgressView extends View {
 
     private CharSequence[] mStatuValues;
 
-    private float mLine;
+    private float mLineSize;
+
+    private boolean mHalfLine = false;
 
     public StatusProgressView(Context context) {
         this(context, null);
@@ -61,7 +63,7 @@ public class StatusProgressView extends View {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.StatusProgressView, defStyleAttr, 0);
 
         mCompleteState = array.getInt(R.styleable.StatusProgressView_completeState, 1);
-        mLine = array.getDimension(R.styleable.StatusProgressView_lineheight, dp2px(5f));
+        mLineSize = array.getDimension(R.styleable.StatusProgressView_lineSize, dp2px(5f));
         int complete = array.getResourceId(R.styleable.StatusProgressView_completeBackgroud, R.drawable.jd_step_01);
         int uncompete = array.getResourceId(R.styleable.StatusProgressView_uncompleteBackgroud, R.drawable.jd_step_02);
         String[] coloes = {"#168FF7", "#C1C1C1"};
@@ -74,13 +76,14 @@ public class StatusProgressView extends View {
         if (mStatuValues != null)
             mItemCount = mStatuValues.length;
 
+        mHalfLine = array.getBoolean(R.styleable.StatusProgressView_itemHalfLine, false);
         array.recycle();
 
         mCompleteBitmap = BitmapFactory.decodeResource(getResources(), complete);
         mUncompletedBitmap = BitmapFactory.decodeResource(getResources(), uncompete);
 
         mPaint = new Paint();
-        mPaint.setStrokeWidth(mLine);
+        mPaint.setStrokeWidth(mLineSize);
 
         mTextPaint = new TextPaint();
         mTextPaint.setTextSize(textSize);
@@ -125,7 +128,7 @@ public class StatusProgressView extends View {
             if (mStatuValues != null)
                 canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
 
-            if (i == mCompleteState - 1) {
+            if (i == mCompleteState - 1 && !mHalfLine) {
                 mPaint.setColor(mUnCompleteColor);
             }
 
@@ -144,7 +147,7 @@ public class StatusProgressView extends View {
      * @return
      */
     public float getLineSize() {
-        return mLine;
+        return mLineSize;
     }
 
     /**
@@ -153,7 +156,7 @@ public class StatusProgressView extends View {
      * @param line
      */
     public void setLineSize(float line) {
-        mLine = line;
+        mLineSize = line;
         mPaint.setStrokeWidth(dp2px(line));
         invalidate();
     }
