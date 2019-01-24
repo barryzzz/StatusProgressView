@@ -8,16 +8,17 @@
     tools:context=".MainActivity">
 
     <com.lsl.statusprogressview.StatusProgressView
+        android:id="@+id/statusview"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:completeBackgroud="@drawable/audit_complete"
-        app:completeColor="#03A9F5"
+        app:completeBackgroud="@drawable/jd_step_01"
+        app:completeColor="@color/color_completed"
         app:completeState="2"
         app:itemTextSize="12sp"
         app:itemValues="@array/ProgressStatus"
         app:lineheight="10dp"
-        app:uncompleteBackgroud="@drawable/audit_uncomplete"
-        app:uncompleteColor="#E4E4E4" />
+        app:uncompleteBackgroud="@drawable/jd_step_02"
+        app:uncompleteColor="@color/color_uncompleted" />
 
     <LinearLayout
 

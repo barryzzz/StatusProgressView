@@ -23,7 +23,7 @@ import java.util.List;
 public class StatusProgressView extends View {
 
 
-    private int mItemCount = 1;
+    private int mItemCount = 0;
 
     private int mCompleteState = 3;
 
@@ -42,7 +42,7 @@ public class StatusProgressView extends View {
 
     private TextPaint mTextPaint;
 
-    private String[] mStatuValues;
+    private CharSequence[] mStatuValues;
 
     private float mLine;
 
@@ -62,17 +62,17 @@ public class StatusProgressView extends View {
 
         mCompleteState = array.getInt(R.styleable.StatusProgressView_completeState, 1);
         mLine = array.getDimension(R.styleable.StatusProgressView_lineheight, dp2px(5f));
-        int complete = array.getResourceId(R.styleable.StatusProgressView_completeBackgroud, R.drawable.audit_complete);
-        int uncompete = array.getResourceId(R.styleable.StatusProgressView_uncompleteBackgroud, R.drawable.audit_uncomplete);
-        String[] coloes = {"#03A9F5", "#E4E4E4"};
+        int complete = array.getResourceId(R.styleable.StatusProgressView_completeBackgroud, R.drawable.jd_step_01);
+        int uncompete = array.getResourceId(R.styleable.StatusProgressView_uncompleteBackgroud, R.drawable.jd_step_02);
+        String[] coloes = {"#168FF7", "#C1C1C1"};
         mCompleteColor = array.getColor(R.styleable.StatusProgressView_completeColor, Color.parseColor(coloes[0]));
         mUnCompleteColor = array.getColor(R.styleable.StatusProgressView_uncompleteColor, Color.parseColor(coloes[1]));
 
         float textSize = array.getDimension(R.styleable.StatusProgressView_itemTextSize, sp2px(16));
 
-        mStatuValues = (String[]) array.getTextArray(R.styleable.StatusProgressView_itemValues);
-
-        mItemCount = mStatuValues.length;
+        mStatuValues = array.getTextArray(R.styleable.StatusProgressView_itemValues);
+        if (mStatuValues != null)
+            mItemCount = mStatuValues.length;
 
         array.recycle();
 
@@ -93,8 +93,10 @@ public class StatusProgressView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
-        mItemWidth = w / mItemCount;
+        if (mItemCount != 0)
+            mItemWidth = w / mItemCount;
+        else
+            mItemWidth = w;
         mItemHeight = h;
     }
 
@@ -120,8 +122,8 @@ public class StatusProgressView extends View {
                 canvas.drawLine(i * mItemWidth, mItemHeight / 2,
                         (i * mItemWidth + mItemWidth / 2) - bitmap.getWidth() / 2, mItemHeight / 2, mPaint);
             }
-            if (mStatuValues.length != 0)
-                canvas.drawText(mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
+            if (mStatuValues != null)
+                canvas.drawText((String) mStatuValues[i], (mItemWidth * i + mItemWidth / 2), mItemHeight / 2 + bitmap.getHeight(), mTextPaint);
 
             if (i == mCompleteState - 1) {
                 mPaint.setColor(mUnCompleteColor);
