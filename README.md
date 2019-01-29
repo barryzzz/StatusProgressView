@@ -22,6 +22,7 @@
 
 
 参数说明：
+
 属性 | 属性说明
 ---- | ---
 completeState | 状态位置(完成)
@@ -34,4 +35,3 @@ itemTextSize | 字体大小
 itemValues | 状态值
 itemHalfLine | 线条是否折半(默认不折半)
 itemTextStyle | 字体位置(顶部，底部，默认底部)
-
