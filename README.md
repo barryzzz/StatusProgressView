@@ -22,16 +22,16 @@
 
 
 参数说明：
-|属性|属性说明|
-|----|------|
-|completeState| 状态位置(完成)|
-|lineSize|线条大小|
-|completeBackgroud|完成状态的图标|
-|uncompleteBackgroud|未完成状态图标|
-|completeColor|完成状态颜色|
-|uncompleteColor|未完成状态颜色|
-|itemTextSize|字体大小|
-|itemValues|状态值|
-|itemHalfLine|线条是否折半(默认不折半)|
-|itemTextStyle|字体位置(顶部，底部，默认底部)|
+属性 | 属性说明
+---- | ---
+completeState | 状态位置(完成)
+lineSize | 线条大小
+completeBackgroud | 完成状态的图标
+uncompleteBackgroud | 未完成状态图标
+completeColor | 完成状态颜色
+uncompleteColor | 未完成状态颜色
+itemTextSize | 字体大小
+itemValues | 状态值
+itemHalfLine | 线条是否折半(默认不折半)
+itemTextStyle | 字体位置(顶部，底部，默认底部)
 
