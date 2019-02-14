@@ -1,6 +1,7 @@
 # StatusProgressView
 效果图:
 
+![效果图](https://raw.githubusercontent.com/barryzzz/StatusProgressView/master/test.jpg?token=AK9OhjAMPumMTDmZvtR8XZZASyG1ZwY_ks5cZRTKwA%3D%3D)
 
 使用说明：
 ```
